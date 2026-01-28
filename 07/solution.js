@@ -108,7 +108,7 @@ function work(nodes, edges, maxWorkers) {
     // cleanup jobs - skipped first pass
     const finished = threads.filter((t) => t.remaining === 0);
     threads = threads.filter((t) => t.remaining > 0);
-    finished.sort((a, b) => a.node.localeCompare(b.node));
+    finished.sort((a, b) => a.node.charCodeAt(0) - b.node.charCodeAt(0));
 
     for (const job of finished) {
       availableWorkers += 1;
