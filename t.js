@@ -1,30 +1,42 @@
+// core = repeating chars
+function expandPalindromeFromCore(s, lo, hi) {
+  // safety
+  if (hi >= s.length || s[lo] !== s[hi]) return "";
+
+  let l = lo;
+  let h = hi;
+
+  // PEEK NEXT
+  while (l - 1 >= 0 && h + 1 < s.length && s[l - 1] === s[h + 1]) {
+    l--;
+    h++;
+  }
+  const sub = s.slice(l, h + 1);
+
+  return sub;
+}
+
 /**
  * @param {string} s
- * @return {boolean}
+ * @return {string}
  */
-var isValid = function (s) {
-  if (s.length === 0) return true;
-  if (s.length % 2 !== 0) return false;
+var longestPalindrome = function (s) {
+  if (s.length === 1 || s.length === 0) return s;
+  let longest = s[0];
 
-  const BRACKETS = { ")": "(", "]": "[", "}": "{" };
-
-  const stackO = [];
-
-  for (const c of s) {
-    if (BRACKETS[c]) {
-      // return early if close with no open
-      if (stackO.length === 0 || stackO[stackO.length - 1] !== BRACKETS[c]) {
-        return false;
-      } else {
-        stackO.pop();
-      }
-    } else {
-      stackO.push(c);
+  for (let i = 0; i < s.length; i++) {
+    let hi = i;
+    // PEEK NEXT FOR REPEATS
+    while (hi + 1 < s.length && s[hi + 1] === s[i]) {
+      hi++;
     }
+    const sub = expandPalindromeFromCore(s, i, hi);
+    if (sub.length > longest.length) longest = sub;
+    //skip to next non-repeating char - i++ happens immediately after this
+    i = hi;
   }
 
-  if (stackO.length !== 0) return false;
-  return true;
+  return longest;
 };
 
-console.log(isValid("{{{{}}}}"));
+console.log(longestPalindrome("abbttabbad"));
